@@ -1,3 +1,11 @@
+# This playbook will connect to every device of the [vm] group in the /etc/ansible/hosts file 
+# [vm]
+# 10.X.X.X
+# 10.X.X.X
+# 10.X.X.X
+#
+# It will then check for each one of them if no pending job exist 
+
 # Doc for this module https://docs.ansible.com/ansible/latest/modules/panos_check_module.html
 # changed_when should always be set to False for operational command
 

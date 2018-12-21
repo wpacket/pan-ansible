@@ -1,3 +1,11 @@
+# This playbook will connect to every device of the [vm] group in the /etc/ansible/hosts file 
+# [vm]
+# 10.X.X.X
+# 10.X.X.X
+# 10.X.X.X
+#
+# It will the display for each one of them the running PanOS version
+
 # Doc for this module are available here https://docs.ansible.com/ansible/latest/modules/panos_op_module.html
 # changed_when should always be set to False for operational command
 
