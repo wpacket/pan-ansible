@@ -22,7 +22,7 @@
     changed_when: False
     include_vars: vars.yml
     
-  - name: Check OS version on VM100
+  - name: Check OS version on each VM
     register: result
     
     panos_op:
@@ -37,4 +37,3 @@
     
   - debug: 
       msg: "{{ hostname_value }} run {{ sw_value }}"
-      msg: "{{ result.stdout }}"
