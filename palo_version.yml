@@ -1,0 +1,32 @@
+# Doc for this module are available here https://docs.ansible.com/ansible/latest/modules/panos_op_module.html
+# changed_when should always be set to False for operational command
+
+- name: Check PAN equipment OS version
+  hosts: vm
+  connection:  local
+  gather_facts:  True
+  vars:
+    hostname_path: response.result.system.hostname
+    version_path: response.result.system."sw-version"
+
+  tasks:
+  - name: Set Variables
+    changed_when: False
+    include_vars: vars.yml
+    
+  - name: Check OS version on VM100
+    register: result
+    
+    panos_op:
+      ip_address: "{{ inventory_hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      cmd: 'show system info'
+
+  - set_fact:
+      hostname_value: "{{ result.stdout | from_json | json_query(hostname_path) }}"
+      sw_value: "{{ result.stdout | from_json | json_query(version_path) }}"
+    
+  - debug: 
+      msg: "{{ hostname_value }} run {{ sw_value }}"
+      msg: "{{ result.stdout }}"

@@ -1,0 +1,21 @@
+# Doc for this module https://docs.ansible.com/ansible/latest/modules/panos_check_module.html
+# changed_when should always be set to False for operational command
+
+- name: Check PAN equipment Status
+  hosts: vm
+  connection:  local
+  gather_facts:  True
+
+  tasks:
+  - name: Set Variables
+    changed_when: False
+    include_vars: vars.yml
+    
+  - name: Check The PAN equipement status
+    changed_when: False  
+    panos_check:
+      ip_address: "{{ inventory_hostname }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+
+
