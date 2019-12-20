@@ -1,16 +1,14 @@
-# This playbook will connect to every device of the [vm] group in the /etc/ansible/hosts file 
-# [vm]
-# 10.X.X.X
-# 10.X.X.X
-# 10.X.X.X
+# This playbook will connect to every device listed in the hosts file with the following command
+#
+# ansible-playbook palo_check.yml -i host
 #
 # It will then check for each one of them if no pending job exist 
-
+#
 # Doc for this module https://docs.ansible.com/ansible/latest/modules/panos_check_module.html
 # changed_when should always be set to False for operational command
 
 - name: Check PAN equipment Status
-  hosts: vm
+  hosts: ALL
   connection:  local
   gather_facts:  True
 
@@ -23,7 +21,7 @@
     changed_when: False  
     panos_check:
       ip_address: "{{ inventory_hostname }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
+      username: "{{ ansible_ssh_user }}"
+      password: "{{ ansible_ssh_pass }}"
 
 

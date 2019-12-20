@@ -1,0 +1,44 @@
+# This playbook will connect to every device listed in the hosts file with the following command
+#
+# ansible-playbook pan_config_pull.yml -i host
+#
+# It will then  extract the running config from each devices and save them locally in ./config/
+
+- name: Pull Configuration from Palo Alto Firewalls
+  hosts: ALL
+  gather_facts: no
+  pre_tasks:
+    - include_vars: vars.yml
+
+  tasks:
+    - name: Generate API Key
+      connection: local
+      uri:
+        validate_certs: no
+        url: 'https://{{inventory_hostname}}/api/?type=keygen&user={{ansible_ssh_user}}&password={{ansible_ssh_pass}}'
+        return_content: yes
+        method: GET
+      register: key_string
+
+    - name: Extract API Key from XML Output
+      connection: local
+      xml:
+        xmlstring: '{{key_string.content}}'
+        content: 'text'
+        xpath: '/response/result/key'
+      register: key_list
+
+    - name: Backup configuration from PAN Equipement
+      connection: local
+      uri:
+        validate_certs: no
+        url: "https://{{inventory_hostname}}/api/?type=config&action=show&key={{key_list.matches[0].key}}"
+        return_content: yes
+        method: GET
+      register: configuration_string
+  
+    - name: Remove XML Header and Save file in {{configs_dir}}
+      connection: local
+      copy:
+        content: "{{configuration_string['content']  | regex_replace('<response.*<result>') | regex_replace('</result></response>')}}"
+        dest: '{{configs_dir}}{{hostname}}.txt'

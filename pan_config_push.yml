@@ -1,0 +1,45 @@
+# This playbook will connect to every device listed in the hosts file with the following command
+#
+# ansible-playbook pan_config_push.yml -i host
+#
+# It will then  push , load & commit the configuration from the ./config/ local directory on each equipement
+# The configuration file name must respect the following format {{ hostname }}.txt
+
+- name: Push Configuration , Load & Commit configuration to Palo Alto Networks equipements
+  hosts: ALL
+  gather_facts: no
+  pre_tasks:
+    - include_vars: vars.yml
+
+  tasks: 
+    - name: Checking ssh connectivity
+      connection: local
+      wait_for: 
+        host: '{{ ansible_host }}'
+        port: 22  
+        timeout: 5
+
+    - name: Push  configurations on each devices from the {{ configs_dir }} directory
+      connection: local
+      panos_import:
+        validate_certs: no
+        ip_address: '{{ ansible_host }}'
+        username: '{{ ansible_ssh_user }}'
+        password: '{{ ansible_ssh_pass }}'
+        file: '{{ configs_dir }}{{ hostname }}.txt'
+        category: "configuration"
+
+    - name: Load configurations on each devices
+      connection: local
+      panos_loadcfg:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ ansible_ssh_user }}'
+        password: '{{ ansible_ssh_pass }}'
+        file: '{{ hostname }}.txt'
+
+    - name: Commit configuration on each devices
+      connection: local
+      panos_commit:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ ansible_ssh_user }}'
+        password: '{{ ansible_ssh_pass }}'

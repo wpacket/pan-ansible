@@ -1,10 +1,8 @@
-# This playbook will connect to every device of the [vm] group in the /etc/ansible/hosts file 
-# [vm]
-# 10.X.X.X
-# 10.X.X.X
-# 10.X.X.X
+# This playbook will connect to every device listed in the hosts file with the following command
 #
-# It will the display for each one of them the running PanOS version
+# ansible-playbook palo_version.yml -i host
+#
+# It will then display for each one of them the running Pan-OS version
 
 # Doc for this module are available here https://docs.ansible.com/ansible/latest/modules/panos_op_module.html
 # changed_when should always be set to False for operational command
@@ -27,8 +25,8 @@
     
     panos_op:
       ip_address: "{{ inventory_hostname }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
+      username: "{{ ansible_ssh_user }}"
+      password: "{{ ansible_ssh_pass }}"
       cmd: 'show system info'
 
   - set_fact:
