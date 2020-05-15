@@ -1,5 +1,5 @@
 [ALL]
-10.15.46.41     hostname=INTERNET-FW-1     
-10.15.46.42     hostname=INTERNET-FW-2
-10.15.46.43     hostname=LAN-FW-3
-10.15.46.44     hostname=LAN-FW-4
+10.10.45.41     hostname=INTERNET-FW-1     
+10.10.45.42     hostname=INTERNET-FW-2
+10.10.45.43     hostname=LAN-FW-3
+10.10.45.44     hostname=LAN-FW-4
