@@ -8,7 +8,7 @@
 # changed_when should always be set to False for operational command
 
 - name: Check PAN equipment OS version
-  hosts: vm
+  hosts: all
   connection:  local
   gather_facts:  True
   vars:
@@ -20,7 +20,7 @@
     changed_when: False
     include_vars: vars.yml
     
-  - name: Check OS version on each VM
+  - name: Check OS version on each Firewall
     register: result
     
     panos_op:
